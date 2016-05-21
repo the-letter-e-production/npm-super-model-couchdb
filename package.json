@@ -1,7 +1,7 @@
 {
   "name": "super-model-couchdb",
   "version": "1.0.0",
-  "description": "",
+  "description": "This plugin provides basic CouchDB access to Super Model",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,5 +11,18 @@
   "dependencies": {
     "q": "^1.4.1",
     "request": "^2.72.0"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/the-letter-e-production/npm-super-model-couchdb.git"
+  },
+  "keywords": [
+    "super-model",
+    "couchdb"
+  ],
+  "bugs": {
+    "url": "https://github.com/the-letter-e-production/npm-super-model-couchdb/issues"
+  },
+  "homepage": "https://github.com/the-letter-e-production/npm-super-model-couchdb#readme"
 }

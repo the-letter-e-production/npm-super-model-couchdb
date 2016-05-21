@@ -15,6 +15,7 @@ var sm = require('super-model');
  * Add a data source
  */
 sm.addDataSource(require('super-model-couchdb')({
+    protocol: 'http',
     host: 'localhost',
     port: '5984'
 }));
