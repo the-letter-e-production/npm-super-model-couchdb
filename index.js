@@ -28,7 +28,7 @@ function getDocument(id, cb){
     var _this = this;
     request({
         method: 'GET',
-        url: this.data_sources.couchdb._options.protocol + '://' + this.data_sources.couchdb._options.host + ':' + this.data_sources.couchdb._options.port + '/' + this.data_sources.couchdb._options.database + '/' + id
+        url: this._options.protocol + '://' + this._options.host + ':' + this._options.port + '/' + this._options.database + '/' + id
     }, function(err, res, body){
         if( err ){
             throw new Error('Request Error: ' + err);
@@ -42,13 +42,12 @@ function saveDocument(cb){
     var _this = this;
     request({
         method: 'PUT',
-        url: this.data_sources.couchdb._options.protocol + '://' + this.data_sources.couchdb._options.host + ':' + this.data_sources.couchdb._options.port + '/' + this.data_sources.couchdb._options.database + (this.get('_id') ? '/' + this.get('_id') : ''),
+        url: this._options.protocol + '://' + this._options.host + ':' + this._options.port + '/' + this._options.database + (this.get('_id') ? '/' + this.get('_id') : ''),
         json: this.export()
     }, function(err, res, body){
         if( err ){
             throw new Error('Request Error: ' + err);
         }
-
         var data = body;
         if( data.ok === true ){
             _this.set('_id', data.id);
