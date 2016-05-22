@@ -25,7 +25,6 @@ var SuperModelCouchdb = function(options){
 };
 
 function getDocument(id, cb){
-    var _this = this;
     request({
         method: 'GET',
         url: this._options.protocol + '://' + this._options.host + ':' + this._options.port + '/' + this._options.database + '/' + id
@@ -34,12 +33,11 @@ function getDocument(id, cb){
             throw new Error('Request Error: ' + err);
         }
         var data = JSON.parse(body);
-        cb.call(_this, data);
-    });
+        cb.call(this, data);
+    }.bind(this));
 }
 
 function saveDocument(cb){
-    var _this = this;
     request({
         method: 'PUT',
         url: this._options.protocol + '://' + this._options.host + ':' + this._options.port + '/' + this._options.database + (this.get('_id') ? '/' + this.get('_id') : ''),
@@ -50,13 +48,13 @@ function saveDocument(cb){
         }
         var data = body;
         if( data.ok === true ){
-            _this.set('_id', data.id);
-            _this.set('_rev', data.rev);
-            cb.call(_this);
+            this.set('_id', data.id);
+            this.set('_rev', data.rev);
+            cb.call(this);
         }else{
             throw new Error('CouchDB ' + data.error + ': ' + data.reason);
         }
-    });
+    }.bind(this));
 }
 
 module.exports = SuperModelCouchdb;
