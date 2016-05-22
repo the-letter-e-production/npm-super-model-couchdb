@@ -27,13 +27,13 @@ var SuperModelCouchdb = function(options){
 function getDocument(id, cb){
     request({
         method: 'GET',
-        url: this._options.protocol + '://' + this._options.host + ':' + this._options.port + '/' + this._options.database + '/' + id
+        url: this._options.protocol + '://' + this._options.host + ':' + this._options.port + '/' + this._options.database + '/' + id,
+        json: true
     }, function(err, res, body){
         if( err ){
             throw new Error('Request Error: ' + err);
         }
-        var data = JSON.parse(body);
-        cb.call(this, data);
+        cb.call(this, body);
     }.bind(this));
 }
 
@@ -46,13 +46,13 @@ function saveDocument(cb){
         if( err ){
             throw new Error('Request Error: ' + err);
         }
-        var data = body;
-        if( data.ok === true ){
-            this.set('_id', data.id);
-            this.set('_rev', data.rev);
+        
+        if( body.ok === true ){
+            this.set('_id', body.id);
+            this.set('_rev', body.rev);
             cb.call(this);
         }else{
-            throw new Error('CouchDB ' + data.error + ': ' + data.reason);
+            throw new Error('CouchDB ' + body.error + ': ' + body.reason);
         }
     }.bind(this));
 }
