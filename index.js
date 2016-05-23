@@ -1,4 +1,4 @@
-var q = require('q');
+var Promise = require('bluebird');
 var request = require('request');
 
 /**
@@ -9,15 +9,29 @@ var SuperModelCouchdb = function(options){
         name: 'couchdb',
         source: {
             find: function(id, cb){
-                getDocument.call(this, id, function(data){
+                return Promise.promisify(getDocument, {context: this})(id).then(function(data){
                     this.import(data);
-                    cb.call(this);
-                });
+                    if( typeof cb == 'function' ){
+                        cb.call(this);
+                    }
+                    return;
+                }.bind(this), function(err){
+                    cb.call(this, err);
+                    throw new Error(err);
+                }.bind(this)).bind(this);
             },
             save: function(cb){
-                saveDocument.call(this, function(){
-                    cb.call(this);
-                });
+                return Promise.promisify(saveDocument, {context: this})().then(function(body){
+                    this.set('_id', body.id);
+                    this.set('_rev', body.rev);
+                    if( typeof cb == 'function' ){
+                        cb.call(this);
+                    }
+                    return;
+                }.bind(this), function(err){
+                    cb.call(this, err);
+                    throw new Error(err);
+                }.bind(this)).bind(this);
             },
             _options: options
         }
@@ -31,10 +45,10 @@ function getDocument(id, cb){
         json: true
     }, function(err, res, body){
         if( err ){
-            throw new Error('Request Error: ' + err);
+            return cb('Request Error: ' + err);
         }
-        cb.call(this, body);
-    }.bind(this));
+        return cb(null, body);
+    });
 }
 
 function saveDocument(cb){
@@ -44,15 +58,12 @@ function saveDocument(cb){
         json: this.export()
     }, function(err, res, body){
         if( err ){
-            throw new Error('Request Error: ' + err);
+            return cb('Request Error: ' + err);
         }
-        
         if( body.ok === true ){
-            this.set('_id', body.id);
-            this.set('_rev', body.rev);
-            cb.call(this);
+            cb(null, body);
         }else{
-            throw new Error('CouchDB ' + body.error + ': ' + body.reason);
+            return cb('CouchDB ' + body.error + ': ' + body.reason);
         }
     }.bind(this));
 }
