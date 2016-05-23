@@ -1,6 +1,6 @@
 {
   "name": "super-model-couchdb",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "This plugin provides basic CouchDB access to Super Model",
   "main": "index.js",
   "scripts": {
