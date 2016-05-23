@@ -49,7 +49,12 @@ var User = sm.clone({
  */
 var user = new User;
     user.find(1, //find user with id == 1
-        function(user){ //callback once user is retrieved
-            var email = user.get('email');
-        })
+        function(){ //callback once user is retrieved
+            var email = this.get('email');
+            console.log(email); //check email returned
+            this.set('email', 'newemail@host.com'); //set email to new value
+            this.save(function(){ //save the record
+                console.log('saved', this.export()); //shows updated data and new revision
+            });
+        });
 ```
