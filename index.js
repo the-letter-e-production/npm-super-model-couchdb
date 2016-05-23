@@ -9,29 +9,29 @@ var SuperModelCouchdb = function(options){
         name: 'couchdb',
         source: {
             find: function(id, cb){
-                return Promise.promisify(getDocument, {context: this})(id).then(function(data){
+                return Promise.promisify(getDocument, {context: this})(id).bind(this).then(function(data){
                     this.import(data);
                     if( typeof cb == 'function' ){
                         cb.call(this);
                     }
                     return;
-                }.bind(this), function(err){
+                }, function(err){
                     cb.call(this, err);
                     throw new Error(err);
-                }.bind(this)).bind(this);
+                });
             },
             save: function(cb){
-                return Promise.promisify(saveDocument, {context: this})().then(function(body){
+                return Promise.promisify(saveDocument, {context: this})().bind(this).then(function(body){
                     this.set('_id', body.id);
                     this.set('_rev', body.rev);
                     if( typeof cb == 'function' ){
                         cb.call(this);
                     }
                     return;
-                }.bind(this), function(err){
+                }, function(err){
                     cb.call(this, err);
                     throw new Error(err);
-                }.bind(this)).bind(this);
+                });
             },
             _options: options
         }
