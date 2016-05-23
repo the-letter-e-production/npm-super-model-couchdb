@@ -57,4 +57,19 @@ var user = new User;
                 console.log('saved', this.export()); //shows updated data and new revision
             });
         });
+
+/**
+ * Or user promises!
+ */
+    user.find(1).then(function(){
+        console.log(this.export()); //got your user info!!
+        this.set('email', 'newemail@host.com');
+        this.save().then(function(){
+            console.log('User saved!');
+        }, function(err){
+            console.log('Error saving your user!', err);
+        });
+    }, function(err){
+        console.log('Failed to find that user!', err);
+    });
 ```
